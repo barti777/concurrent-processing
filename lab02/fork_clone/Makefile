@@ -1,0 +1,39 @@
+# kompilator c
+CCOMP = gcc
+
+# konsolidator
+LOADER = gcc
+
+# opcje optymalizacji:
+# wersja do debugowania
+OPT = -g -DDEBUG
+# wersja zoptymalizowana do mierzenia czasu
+# OPT = -O3
+
+# pliki naglowkowe
+INC = -I../pomiar_czasu
+
+# biblioteki
+LIB = -L../pomiar_czasu -lm
+
+# zaleznosci i komendy
+fork: fork.o 
+	$(LOADER) $(OPT) fork.o ../pomiar_czasu/pomiar_czasu.c ../pomiar_czasu/pomiar_czasu.h -o fork $(LIB)
+
+# jak uzyskac plik fork.o ?
+fork.o: fork.c ../pomiar_czasu/pomiar_czasu.h
+	$(CCOMP) -c $(OPT) fork.c $(INC) $(LIB) 
+
+# zaleznosci i komendy
+clone: clone.o 
+	$(LOADER) $(OPT) clone.o -o clone ../pomiar_czasu/pomiar_czasu.c ../pomiar_czasu/pomiar_czasu.h $(LIB)
+
+# jak uzyskac plik clone.o ?
+clone.o: clone.c ../pomiar_czasu/pomiar_czasu.h
+	$(CCOMP) -c $(OPT) clone.c $(INC) 
+
+program: program
+	$(CCOMP) program.c -o program
+
+clean:
+	rm -f *.o
