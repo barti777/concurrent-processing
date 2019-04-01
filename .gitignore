@@ -1,3 +1,6 @@
 # PDF files
 *.pdf
 *.txt
+
+# vscode 
+**/.vscode/**
