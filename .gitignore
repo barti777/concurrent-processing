@@ -1,6 +1,10 @@
+# compiled
+*.out
+*.o
+
 # PDF files
 *.pdf
 *.txt
 
 # vscode 
-**/.vscode/**
+**/.vscode/
