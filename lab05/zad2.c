@@ -7,6 +7,11 @@
 
 const int sizeoftab = 10;
 int *sorted = NULL;
+int *string1 = NULL;
+int *string1_copy = NULL;
+int *string2 = NULL;
+int *string2_copy = NULL;
+int can_merge = 0;
 
 void print_string(int *, int);
 int *generate_string(int, int, int);
@@ -14,12 +19,6 @@ int *generate_empty_string(int);
 void insertionSort(int *, int);
 void *sortAndMergeArrays(void *);
 void *merge_thread(void *);
-
-struct thread_data
-{
-    int size;
-    unsigned int *array;
-};
 
 struct thread_data_merge
 {
@@ -29,19 +28,18 @@ struct thread_data_merge
     unsigned int *array2;
 };
 
-struct thread_data thread_data_array[2];
 struct thread_data_merge thread_data_arrays;
 
 int main(int argc, char const *argv[])
 {
     clock_t start, end, total_t;
-    pthread_t threads[2], thread_merge;
+    pthread_t thread_sort, thread_merge;
 
     srand(time(NULL));
-    int *string1 = generate_string(sizeoftab, 1, 100);
-    int *string1_copy = generate_empty_string(sizeoftab);
-    int *string2 = generate_string(sizeoftab, 1, 100);
-    int *string2_copy = generate_empty_string(sizeoftab);
+    string1 = generate_string(sizeoftab, 1, 100);
+    string1_copy = generate_empty_string(sizeoftab);
+    string2 = generate_string(sizeoftab, 1, 100);
+    string2_copy = generate_empty_string(sizeoftab);
 
     for (int i = 0; i < sizeoftab; i++)
     {
@@ -53,19 +51,15 @@ int main(int argc, char const *argv[])
     print_string(string2, sizeoftab);
 
     start = clock();
-    for (int t = 0; t < 2; t++)
-    {
-        thread_data_array[t].size = sizeoftab;
-        if (t == 0)
-            thread_data_array[t].array = string1;
-        else
-            thread_data_array[t].array = string2;
+    thread_data_arrays.array = string1_copy;
+    thread_data_arrays.array2 = string2_copy;
+    thread_data_arrays.size = sizeoftab;
+    thread_data_arrays.size2 = sizeoftab;
 
-        if (pthread_create(&threads[t], NULL, sortAndMergeArrays, (void *)&thread_data_array[t]))
-        {
-            perror("pthread_create()");
-            exit(-1);
-        }
+    if (pthread_create(&thread_sort, NULL, sortAndMergeArrays, (void *)&thread_data_arrays))
+    {
+        perror("pthread_create()");
+        exit(-1);
     }
 
     thread_data_arrays.array = string1_copy;
@@ -73,16 +67,20 @@ int main(int argc, char const *argv[])
     thread_data_arrays.size = sizeoftab;
     thread_data_arrays.size2 = sizeoftab;
 
-    if (pthread_create(&thread_merge, NULL, merge_thread, (void *)&thread_data_arrays))
+    pthread_join(thread_sort, NULL);
+    while (1)
     {
-        perror("pthread_create()");
-        exit(-1);
+        if (can_merge == 1)
+        {
+            if (pthread_create(&thread_merge, NULL, merge_thread, (void *)&thread_data_arrays))
+            {
+                perror("pthread_create()");
+                exit(-1);
+            }
+            pthread_join(thread_merge, NULL);
+            break;
+        }
     }
-
-    pthread_join(threads[0], NULL);
-    pthread_join(threads[1], NULL);
-    pthread_join(thread_merge, NULL);
-
     end = clock();
 
     total_t = (double)(end - start);
@@ -145,16 +143,23 @@ void insertionSort(int *array, int n)
 
 void *sortAndMergeArrays(void *threadarg)
 {
-    static int which = 0;
-    int size;
-    unsigned int *array;
-    struct thread_data *my_data;
+    int size, size2;
+    unsigned int *array, *array2;
+    struct thread_data_merge *my_data;
 
-    my_data = (struct thread_data *)threadarg;
+    my_data = (struct thread_data_merge *)threadarg;
     size = my_data->size;
     array = my_data->array;
+    size2 = my_data->size2;
+    array2 = my_data->array2;
 
     insertionSort(array, size);
+    insertionSort(array2, size2);
+
+    printf("sorted:\n");
+    print_string(array, size);
+    print_string(array2, size2);
+    can_merge = 1;
     pthread_exit(NULL);
 }
 
