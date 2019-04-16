@@ -170,7 +170,7 @@ void exFour(double **firstMatrix, int n, int m, double **secondMatrix, int p, in
 #pragma omp parallel for num_threads(6)
             for (k = 0; k < p; k++)
             {
-// #pragma omp critical
+#pragma omp critical
                 result[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
             }
         }
