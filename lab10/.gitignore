@@ -1,0 +1,2 @@
+# unignore CMakeList.txt
+!CMakeLists.txt
