@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
 
-    int rank, size, number, division, from, to, i, k;
+    int rank, numProc, number, division, from, to, i, k;
     const double GAMMA = 0.5772156649015328606065120900824024310421;
 
     double mySum, sum, myGamma, gamma;
@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_size(MPI_COMM_WORLD, &numProc);
 
     if (rank == 0) {
         printf("Input amount of iterations: ");
@@ -26,10 +26,10 @@ int main(int argc, char **argv) {
     MPI_Bcast(&number, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     // podzielenie problemu na podproblemy
-    if ((number % size) == 0) {
-        division = (number / size);
+    if ((number % numProc) == 0) {
+        division = (number / numProc);
     } else {
-        division = (number / size) + 1;
+        division = (number / numProc) + 1;
     }
 
     // każdy proces ma osobny zakres pracy
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
     if (rank != 0) {
         MPI_Send(&sum, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
     } else {
-        for (i = 1; i <= size - 1; ++i) {
+        for (i = 1; i <= numProc - 1; ++i) {
             MPI_Recv(&mySum, 1, MPI_DOUBLE, i, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
             sum += mySum;
         }
