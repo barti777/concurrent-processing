@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
         printf("Input amount of iterations: ");
         std::cin >> number;
     }
+//    std::cout << "numProc: " << numProc << std::endl;
 
     // rozsyłanie komunikatu number typu int jeden raz root 0 w obrębie komunikatora MPI_COMM_WORLD
     MPI_Bcast(&number, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -48,19 +49,9 @@ int main(int argc, char **argv) {
         if (k == 0) continue;
         sum += 1.0 / k;
     }
-    // obliczanie
-    if (rank != 0) {
-        MPI_Send(&sum, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-    } else {
-        for (i = 1; i <= numProc - 1; ++i) {
-            MPI_Recv(&mySum, 1, MPI_DOUBLE, i, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-            sum += mySum;
-        }
-        myGamma = sum;
-    }
+    myGamma = sum;
     MPI_Reduce(&myGamma, &gamma, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     if (rank == 0) {
-
         std::cout << "γ (Euler's gamma) is approximately: " << gamma - log(number) << ", Error is: "
                   << fabs((gamma - log(number)) - GAMMA) << std::endl;
     }
