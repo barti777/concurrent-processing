@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
           / (double) CLOCKS_PER_SEC;
 
     mempcpy(obrazek_casablanca_out->pixel, outVector, size);
-    writeData("new_casablanca_image.pgm", obrazek_casablanca_out);
+    writeData("new_casablanca_image_mpi.pgm", obrazek_casablanca_out);
     cout << "koniec programu, czas działania: " << end - start << endl;
     return 0;
 }

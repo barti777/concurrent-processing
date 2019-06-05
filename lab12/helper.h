@@ -22,6 +22,7 @@ uchar *matrixToVector(uchar **matrix, int matrix_n, int matrix_m, int n);
 
 uchar **allocMatrix(int n, int m);
 
+uchar *allocVector(const int n);
 
 void printInfo(image *img) {
     cout << "Informacje o obrazku:" << endl;
@@ -87,7 +88,7 @@ uchar *matrixToVector(uchar **matrix, const int matrix_n, const int matrix_m, co
     uchar *vector = (uchar *) malloc(sizeof(int) * n);
     for (int i = 0; i < matrix_n; i++) {
         for (int j = 0; j < matrix_m; j++) {
-            vector[j* matrix_n + i] = matrix[i][j];
+            vector[j * matrix_n + i] = matrix[i][j];
         }
     }
     return vector;
@@ -102,6 +103,14 @@ uchar **allocMatrix(const int n, const int m) {
         }
     }
     return matrix;
+}
+
+uchar *allocVector(const int n) {
+    auto *vector = (uchar *) malloc(sizeof(uchar) * n);
+    for (int i = 0; i < n; i++) {
+        vector[i] = 0;
+    }
+    return vector;
 }
 
 #endif //LAB12_HELPER_H
