@@ -11,29 +11,29 @@ int LP[][3] = {{1, 1, 1},
 
 
 int main(int argc, char *argv[]) {
-    image *obrazek_boulevard = nullptr;
-    image *obrazek_boulevard_out = nullptr;
+    image *image_casablanca = nullptr;
+    image *image_casablanca_out = nullptr;
     int width, height;
     double start, end;
 
-    obrazek_boulevard = (image *) malloc(sizeof(image));
-    obrazek_boulevard_out = (image *) malloc(sizeof(image));
+    image_casablanca = (image *) malloc(sizeof(image));
+    image_casablanca_out = (image *) malloc(sizeof(image));
 
-    cout << "wczytywanie obrazka boulevard" << endl;
-    readInput("../sources/boulevard.pgm", obrazek_boulevard);
-    printInfo(obrazek_boulevard);
+    cout << "loading image casablanca" << endl;
+    readInput("../sources/casablanca.pgm", image_casablanca);
+    printInfo(image_casablanca);
     cout << endl;
 
-    width = obrazek_boulevard->width;
-    height = obrazek_boulevard->height;
+    width = image_casablanca->width;
+    height = image_casablanca->height;
     const int size = width * height;
 
     uchar *inVector = nullptr;
     uchar *outVector = nullptr;
 
-    copyImages(obrazek_boulevard_out, obrazek_boulevard);
+    copyImages(image_casablanca_out, image_casablanca);
     inVector = allocVector(width * height);
-    mempcpy(inVector, obrazek_boulevard->pixel, width * height);
+    mempcpy(inVector, image_casablanca->pixel, width * height);
     outVector = allocVector(width * height);
 
     start = (double) clock()
@@ -71,8 +71,8 @@ int main(int argc, char *argv[]) {
     end = (double) clock()
           / (double) CLOCKS_PER_SEC;
 
-    mempcpy(obrazek_boulevard_out->pixel, outVector, size);
-    writeData("../output/structural_boulevard.pgm", obrazek_boulevard_out);
-    cout << "koniec programu, czas działania: " << end - start << endl;
+    mempcpy(image_casablanca_out->pixel, outVector, size);
+    writeData("../output/sequential_casablanca.pgm", image_casablanca_out);
+    cout << "end of program, working time: " << end - start << endl;
     return 0;
 }

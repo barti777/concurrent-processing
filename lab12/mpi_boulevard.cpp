@@ -3,7 +3,7 @@
 #include "helper.h"
 
 int main(int argc, char *argv[]) {
-    image image_casablanca, image_casablanca_out;
+    image image_boulevard, image_boulevard_out;
     int width, height;
     int numProc, myRank;
     double start = 0, end = 0;
@@ -18,17 +18,17 @@ int main(int argc, char *argv[]) {
                                       {1, 1, 1}};
 
     if (myRank == 0) {
-        readInput("../sources/casablanca.pgm", &image_casablanca);
-        image_casablanca_out.height = image_casablanca.height;
-        image_casablanca_out.width = image_casablanca.width;
-        image_casablanca_out.maxValue = image_casablanca.maxValue;
-        memcpy(image_casablanca_out.type, image_casablanca.type, TYPE_LEN + 1);
+        readInput("../sources/boulevard.pgm", &image_boulevard);
+        image_boulevard_out.height = image_boulevard.height;
+        image_boulevard_out.width = image_boulevard.width;
+        image_boulevard_out.maxValue = image_boulevard.maxValue;
+        memcpy(image_boulevard_out.type, image_boulevard.type, TYPE_LEN + 1);
 
-        height = image_casablanca.height;
-        width = image_casablanca.width;
-        image_casablanca_out.pixel = (uchar *) malloc(
-                sizeof(uchar) * image_casablanca_out.height * image_casablanca_out.width);
-        printInfo(image_casablanca);
+        height = image_boulevard.height;
+        width = image_boulevard.width;
+        image_boulevard_out.pixel = (uchar *) malloc(
+                sizeof(uchar) * image_boulevard_out.height * image_boulevard_out.width);
+        printInfo(image_boulevard);
         cout << endl;
 
         /*
@@ -36,18 +36,18 @@ int main(int argc, char *argv[]) {
          */
         for (int i = 0; i < width * height; i++) {
             if (i < width)
-                image_casablanca_out.pixel[i] = image_casablanca.pixel[i];
+                image_boulevard_out.pixel[i] = image_boulevard.pixel[i];
             if (i > width * height - width)
-                image_casablanca_out.pixel[i] = image_casablanca.pixel[i];
+                image_boulevard_out.pixel[i] = image_boulevard.pixel[i];
             if (i % width == 0)
-                image_casablanca_out.pixel[i] = image_casablanca.pixel[i];
+                image_boulevard_out.pixel[i] = image_boulevard.pixel[i];
             if ((i % width - (width - 1)) == 0)
-                image_casablanca_out.pixel[i] = image_casablanca.pixel[i];
+                image_boulevard_out.pixel[i] = image_boulevard.pixel[i];
         }
 
         start = MPI_Wtime();
     }
-    // Rozesłanie informacji o rozmiarze całości
+    // sending information about width and height to subprocesses
     MPI_Bcast(&width, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&height, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     uchar *local_buffer = allocVector(local_counts[myRank]);
 
     //sending scattered data to all sub processes
-    MPI_Scatterv(image_casablanca.pixel, local_counts, offsets, MPI_UNSIGNED_CHAR, local_buffer, local_counts[myRank],
+    MPI_Scatterv(image_boulevard.pixel, local_counts, offsets, MPI_UNSIGNED_CHAR, local_buffer, local_counts[myRank],
                  MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
     uchar *local_buffer_output = allocVector(local_counts[myRank]);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
         offsets[i] = local_counts[i - 1] + offsets[i - 1];
     }
     // gathering data to pixel in out output from all local processes
-    MPI_Gatherv(&local_buffer_output[width], local_counts[myRank], MPI_UNSIGNED_CHAR, image_casablanca_out.pixel,
+    MPI_Gatherv(&local_buffer_output[width], local_counts[myRank], MPI_UNSIGNED_CHAR, image_boulevard_out.pixel,
                 local_counts, offsets, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
     MPI_Finalize();
@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
     if (myRank == 0) {
         end = MPI_Wtime();
 
-        writeData("../output/mpi_casablanca.pgm", &image_casablanca_out);
-        cout << "koniec programu, czas działania: " << end - start << endl;
+        writeData("../output/mpi_boulevard.pgm", &image_boulevard_out);
+        cout << "end of program, working time: " << end - start << endl;
     }
 
     return 0;

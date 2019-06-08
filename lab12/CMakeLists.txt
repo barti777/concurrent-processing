@@ -9,14 +9,14 @@ set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAG})
 set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
 include_directories(${MPI_INCLUDE_PATH})
 
-add_executable(zadanie_mpi_casablanca zadanie_mpi_casablanca.cpp)
-target_link_libraries(zadanie_mpi_casablanca ${MPI_LIBRARIES})
+add_executable(mpi_casablanca mpi_casablanca.cpp)
+target_link_libraries(mpi_casablanca ${MPI_LIBRARIES})
 
-add_executable(zadanie_structural_casablanca zadanie_structural_casablanca.cpp)
-target_link_libraries(zadanie_structural_casablanca ${MPI_LIBRARIES})
+add_executable(sequential_casablanca sequential_casablanca.cpp)
+target_link_libraries(sequential_casablanca ${MPI_LIBRARIES})
 
-add_executable(zadanie_structural_boulevard zadanie_structural_boulevard.cpp)
-target_link_libraries(zadanie_structural_boulevard ${MPI_LIBRARIES})
+add_executable(sequential_boulevard sequential_boulevard.cpp)
+target_link_libraries(sequential_boulevard ${MPI_LIBRARIES})
 
-add_executable(zadanie_mpi_boulevard zadanie_mpi_boulevard.cpp helper.h)
-target_link_libraries(zadanie_mpi_boulevard ${MPI_LIBRARIES})
+add_executable(mpi_boulevard mpi_boulevard.cpp)
+target_link_libraries(mpi_boulevard ${MPI_LIBRARIES})

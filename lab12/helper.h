@@ -16,14 +16,14 @@ void copyImages(image *, image *);
 uchar *allocVector(int n);
 
 void printInfo(image *img) {
-    cout << "Informacje o obrazku:" << endl;
+    cout << "Information about image:" << endl;
     cout << "width:" << img->width << endl;
     cout << "height:" << img->height << endl;
     cout << "maxValue:" << img->maxValue << endl;
 }
 
 void printInfo(image img) {
-    cout << "Informacje o obrazku:" << endl;
+    cout << "Information about image:" << endl;
     cout << "width:" << img.width << endl;
     cout << "height:" << img.height << endl;
     cout << "maxValue:" << img.maxValue << endl;

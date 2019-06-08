@@ -11,35 +11,35 @@ int LP[][3] = {{1, 1, 1},
 
 
 int main(int argc, char *argv[]) {
-    image *obrazek_casablanca = nullptr;
-    image *obrazek_casablanca_out = nullptr;
+    image *obrazek_boulevard = nullptr;
+    image *obrazek_boulevard_out = nullptr;
     int width, height;
     double start, end;
 
-    obrazek_casablanca = (image *) malloc(sizeof(image));
-    obrazek_casablanca_out = (image *) malloc(sizeof(image));
+    obrazek_boulevard = (image *) malloc(sizeof(image));
+    obrazek_boulevard_out = (image *) malloc(sizeof(image));
 
-    cout << "wczytywanie obrazka casablanca" << endl;
-    readInput("../sources/casablanca.pgm", obrazek_casablanca);
-    printInfo(obrazek_casablanca);
+    cout << "loading image boulevard" << endl;
+    readInput("../sources/boulevard.pgm", obrazek_boulevard);
+    printInfo(obrazek_boulevard);
     cout << endl;
 
-    width = obrazek_casablanca->width;
-    height = obrazek_casablanca->height;
+    width = obrazek_boulevard->width;
+    height = obrazek_boulevard->height;
     const int size = width * height;
 
     uchar *inVector = nullptr;
     uchar *outVector = nullptr;
 
-    copyImages(obrazek_casablanca_out, obrazek_casablanca);
+    copyImages(obrazek_boulevard_out, obrazek_boulevard);
     inVector = allocVector(width * height);
-    mempcpy(inVector, obrazek_casablanca->pixel, width * height);
+    mempcpy(inVector, obrazek_boulevard->pixel, width * height);
     outVector = allocVector(width * height);
 
     start = (double) clock()
             / (double) CLOCKS_PER_SEC;
 
-    // warunki początkowe i brzegowe i koncowe
+    // borders
     for (int i = 0; i < size; i++) {
         if (i < width)
             outVector[i] = inVector[i];
@@ -71,8 +71,8 @@ int main(int argc, char *argv[]) {
     end = (double) clock()
           / (double) CLOCKS_PER_SEC;
 
-    mempcpy(obrazek_casablanca_out->pixel, outVector, size);
-    writeData("../output/structural_casablanca.pgm", obrazek_casablanca_out);
-    cout << "koniec programu, czas działania: " << end - start << endl;
+    mempcpy(obrazek_boulevard_out->pixel, outVector, size);
+    writeData("../output/sequential_boulevard.pgm", obrazek_boulevard_out);
+    cout << "end of program, working time: " << end - start << endl;
     return 0;
 }
