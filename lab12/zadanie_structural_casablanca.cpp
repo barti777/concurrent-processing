@@ -5,9 +5,9 @@
 
 using namespace std;
 
-int LP[][3] = {{1, 1,  1},
-               {1, 12, 1},
-               {1, 1,  1}};
+int LP[][3] = {{1, 1, 1},
+               {1, 1, 1},
+               {1, 1, 1}};
 
 
 int main(int argc, char *argv[]) {
@@ -45,15 +45,15 @@ int main(int argc, char *argv[]) {
             outVector[i] = inVector[i];
         if (i > size - width)
             outVector[i] = inVector[i];
-        if (i % width == 0) {
+        if (i % width == 0)
             outVector[i] = inVector[i];
-            outVector[i - 1] = inVector[i - 1];
-        }
+        if ((i % width - (width - 1)) == 0)
+            outVector[i] = inVector[i];
     }
 
     for (int i = 1; i < size - 1; i++) {
         if ((i < width) || (i > size - width) || (i % width == 0)) {
-            cout << i << endl;
+//            cout << i << endl;
             continue;
         }
         int average = inVector[i - width - 1] * LP[0][0] + inVector[i - width] * LP[0][1] +
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
           / (double) CLOCKS_PER_SEC;
 
     mempcpy(obrazek_casablanca_out->pixel, outVector, size);
-    writeData("new_casablanca_image.pgm", obrazek_casablanca_out);
+    writeData("../output/structural_casablanca.pgm", obrazek_casablanca_out);
     cout << "koniec programu, czas działania: " << end - start << endl;
     return 0;
 }

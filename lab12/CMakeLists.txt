@@ -11,7 +11,12 @@ include_directories(${MPI_INCLUDE_PATH})
 
 add_executable(zadanie_mpi_casablanca zadanie_mpi_casablanca.cpp)
 target_link_libraries(zadanie_mpi_casablanca ${MPI_LIBRARIES})
+
 add_executable(zadanie_structural_casablanca zadanie_structural_casablanca.cpp)
 target_link_libraries(zadanie_structural_casablanca ${MPI_LIBRARIES})
+
 add_executable(zadanie_structural_boulevard zadanie_structural_boulevard.cpp)
 target_link_libraries(zadanie_structural_boulevard ${MPI_LIBRARIES})
+
+add_executable(zadanie_mpi_boulevard zadanie_mpi_boulevard.cpp helper.h)
+target_link_libraries(zadanie_mpi_boulevard ${MPI_LIBRARIES})
